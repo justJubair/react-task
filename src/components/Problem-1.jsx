@@ -2,17 +2,26 @@ import React, { useState } from "react";
 
 const Problem1 = () => {
   const [show, setShow] = useState("all");
+  const [data, setData] = useState([])
+  const [activeEntries, setActiveEntries] = useState([])
+  const [completedEntries, setCompletedEntries] = useState([])
 
   const handleClick = (val) => {
     setShow(val);
+    const selectedActive = data.filter(entry=> entry.status === "active")
+    setActiveEntries(selectedActive)
+    const selectedCompleted = data.filter(entry=> entry.status === "completed")
+    setCompletedEntries(selectedCompleted)
   };
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
-    const name = form.name.value;
-    const status = form.staus.value;
-    console.log(name, status);
+    const name = form?.name?.value;
+    const status = form?.status?.value;
+    const entry = {name, status}
+    setData([...data, entry])
+    form.reset()
   };
 
   return (
@@ -85,7 +94,27 @@ const Problem1 = () => {
                 <th scope="col">Status</th>
               </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+              {show === "all" &&
+                data?.map((entry, idx)=> <tr key={idx}>
+                  <td>{entry?.name}</td>
+                  <td>{entry?.status}</td>
+                </tr>)
+              }
+              {show === "active" &&
+                activeEntries?.map((entry, idx)=> <tr key={idx}>
+                  <td>{entry?.name}</td>
+                  <td>{entry?.status}</td>
+                </tr>)
+              }
+              {show === "completed" &&
+                completedEntries?.map((entry, idx)=> <tr key={idx}>
+                  <td>{entry?.name}</td>
+                  <td>{entry?.status}</td>
+                </tr>)
+              }
+
+            </tbody>
           </table>
         </div>
       </div>
